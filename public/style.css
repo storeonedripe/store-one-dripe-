@@ -1,0 +1,247 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f8f8f8;
+    color:#222;
+}
+
+/* HEADER */
+
+header{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    background:#111;
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 80px;
+    z-index:1000;
+}
+
+header h1{
+    font-size:30px;
+    letter-spacing:2px;
+}
+
+nav{
+    display:flex;
+    align-items:center;
+    gap:30px;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    transition:.3s;
+    font-weight:500;
+}
+
+nav a:hover{
+    color:#ffb400;
+}
+
+/* HERO */
+
+.hero{
+    margin-top:80px;
+    height:90vh;
+    background:
+    linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+    url("https://images.unsplash.com/photo-1521572163474-6864f9cf17ab");
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:white;
+}
+
+.hero h2{
+    font-size:65px;
+    margin-bottom:20px;
+}
+
+.hero p{
+    font-size:22px;
+    margin-bottom:30px;
+}
+
+.btn{
+    background:#ffb400;
+    color:black;
+    padding:15px 40px;
+    border:none;
+    border-radius:50px;
+    cursor:pointer;
+    font-size:18px;
+    transition:.3s;
+}
+
+.btn:hover{
+    background:white;
+}
+
+/* SECTION */
+
+.products{
+    padding:80px;
+}
+
+.products h2{
+    text-align:center;
+    margin-bottom:50px;
+    font-size:40px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:35px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,.1);
+    transition:.4s;
+}
+
+.card:hover{
+    transform:translateY(-10px);
+}
+
+.card img{
+    width:100%;
+    height:350px;
+    object-fit:cover;
+}
+
+.card h3{
+    padding:20px;
+    font-size:24px;
+}
+
+.card p{
+    padding:0 20px;
+    font-size:20px;
+    color:#ff6b00;
+    font-weight:bold;
+}
+
+.card button{
+    width:90%;
+    margin:20px;
+    padding:15px;
+    background:#111;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.card button:hover{
+    background:#ffb400;
+    color:black;
+}
+
+/* FOOTER */
+
+footer{
+    background:#111;
+    color:white;
+    text-align:center;
+    padding:25px;
+    margin-top:70px;
+}
+
+/* DARK MODE */
+
+.dark{
+    background:#111;
+    color:white;
+}
+
+.dark .products{
+    background:#111;
+}
+
+.dark .card{
+    background:#222;
+    color:white;
+}
+
+.dark footer{
+    background:black;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+header{
+    padding:20px;
+    flex-direction:column;
+    gap:15px;
+}
+
+.hero h2{
+    font-size:42px;
+}
+
+.hero p{
+    font-size:18px;
+}
+
+.products{
+    padding:40px 20px;
+}
+
+}
+.order-form{
+    width:400px;
+    margin:60px auto;
+    padding:30px;
+    background:white;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(0,0,0,.2);
+}
+
+.order-form h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.order-form input{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.order-form button{
+    width:100%;
+    padding:14px;
+    background:black;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:17px;
+}
+
+.order-form button:hover{
+    background:#444;
+}

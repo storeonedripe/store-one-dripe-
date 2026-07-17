@@ -1,0 +1,43 @@
+const mongoose = require("mongoose");
+
+const orderSchema = new mongoose.Schema({
+
+    nom: {
+        type: String,
+        required: true
+    },
+
+    prenom: {
+        type: String,
+        required: true
+    },
+
+    telephone: {
+        type: String,
+        required: true
+    },
+
+    adresse: {
+        type: String,
+        required: true
+    },
+
+    produits: [
+        {
+            type: String
+        }
+    ],
+
+    statut: {
+        type: String,
+        default: "En attente"
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+
+});
+
+module.exports = mongoose.model("Order", orderSchema);

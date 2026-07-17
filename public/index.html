@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>STORE ONE DRIPE.MA</title>
+
+
+<style>
+
+body{
+
+    margin:0;
+    font-family:Arial;
+    background:#f4f4f4;
+
+}
+
+
+header{
+
+    background:black;
+    color:white;
+    padding:20px;
+    text-align:center;
+
+}
+
+
+
+.container{
+
+    width:90%;
+    margin:auto;
+
+}
+
+
+
+.products{
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+
+}
+
+
+
+.card{
+
+    background:white;
+    padding:20px;
+    width:250px;
+    border-radius:10px;
+    box-shadow:0 0 10px #ccc;
+
+}
+
+
+
+.card img{
+
+    width:100%;
+    height:200px;
+    object-fit:cover;
+
+}
+
+
+
+button{
+
+    background:black;
+    color:white;
+    border:0;
+    padding:12px;
+    cursor:pointer;
+    border-radius:5px;
+
+}
+
+
+
+form{
+
+    background:white;
+    padding:20px;
+    margin-top:30px;
+    border-radius:10px;
+
+}
+
+
+
+input,textarea{
+
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+
+}
+
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>STORE ONE DRIPE.MA</h1>
+
+<p>Bienvenue dans notre boutique</p>
+
+</header>
+
+
+
+
+
+<div class="container">
+
+
+
+<h2>Nos Articles</h2>
+
+
+
+<div class="products" id="products">
+
+
+</div>
+
+
+
+
+
+
+
+<h2>Confirmation de commande</h2>
+
+
+
+<form id="commandeForm">
+
+
+<input 
+type="text"
+name="nom"
+placeholder="Nom"
+required>
+
+
+
+<input
+type="text"
+name="prenom"
+placeholder="Prénom"
+required>
+
+
+
+<input
+type="tel"
+name="telephone"
+placeholder="Téléphone"
+required>
+
+
+
+<textarea
+name="adresse"
+placeholder="Adresse"
+required></textarea>
+
+
+
+
+<button type="submit">
+
+Confirmer la commande
+
+</button>
+
+
+
+</form>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<script>
+
+
+// Charger les produits
+
+
+async function chargerProduits(){
+
+
+let res = await fetch("/products");
+
+
+let produits = await res.json();
+
+
+
+let html="";
+
+
+
+produits.forEach(p=>{
+
+
+html+=`
+
+<div class="card">
+
+
+<img src="${p.image}">
+
+
+<h3>${p.name}</h3>
+
+
+<p>${p.description}</p>
+
+
+<h3>${p.price} DH</h3>
+
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+
+document.getElementById("products").innerHTML=html;
+
+
+
+}
+
+
+
+
+
+
+
+// Envoyer commande
+
+
+document.getElementById("commandeForm")
+.addEventListener("submit",async function(e){
+
+
+e.preventDefault();
+
+
+
+let form = new FormData(this);
+
+
+
+let commande = Object.fromEntries(form);
+
+
+
+let res = await fetch("/commande",{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify(commande)
+
+
+});
+
+
+
+let data = await res.json();
+
+
+
+alert(data.message);
+
+
+
+this.reset();
+
+
+
+});
+
+
+
+
+
+
+
+chargerProduits();
+
+
+</script>
+
+
+
+</body>
+
+</html>

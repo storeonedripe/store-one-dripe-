@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>STORE ONE DRIPE.MA ADMIN</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#f4f4f4;
+}
+
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:40px auto;
+}
+
+
+.card{
+    background:white;
+    padding:20px;
+    margin:20px 0;
+    border-radius:10px;
+    box-shadow:0 0 10px #ccc;
+}
+
+
+h1,h2{
+    text-align:center;
+}
+
+
+form{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+
+input,textarea{
+    padding:12px;
+    font-size:16px;
+}
+
+
+button{
+
+    padding:10px;
+    border:none;
+    color:white;
+    cursor:pointer;
+    border-radius:5px;
+
+}
+
+
+.add{
+    background:black;
+}
+
+
+.delete{
+    background:red;
+}
+
+
+.edit{
+    background:green;
+}
+
+
+
+table{
+
+    width:100%;
+    border-collapse:collapse;
+
+}
+
+
+th,td{
+
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+
+}
+
+
+th{
+
+    background:black;
+    color:white;
+
+}
+
+
+img{
+
+    width:80px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>STORE ONE DRIPE.MA ADMIN</h1>
+
+
+
+<div class="card">
+
+
+<h2>Ajouter Article</h2>
+
+
+<form 
+action="/add-product"
+method="POST"
+enctype="multipart/form-data">
+
+
+<input 
+type="text"
+name="name"
+placeholder="Nom article"
+required>
+
+
+<input 
+type="number"
+name="price"
+placeholder="Prix"
+required>
+
+
+<textarea
+name="description"
+placeholder="Description">
+</textarea>
+
+
+<input
+type="file"
+name="image"
+accept="image/*"
+required>
+
+
+<button class="add">
+Ajouter
+</button>
+
+
+</form>
+
+
+</div>
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>Articles</h2>
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>Image</th>
+<th>Nom</th>
+<th>Prix</th>
+<th>Description</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="listeProduits">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>Commandes</h2>
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>Nom</th>
+<th>Prénom</th>
+<th>Téléphone</th>
+<th>Adresse</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="listeCommandes">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<script>
+
+
+async function chargerProduits(){
+
+
+const res = await fetch("/products");
+
+const produits = await res.json();
+
+
+let html="";
+
+
+produits.forEach(p=>{
+
+
+html += `
+
+<tr>
+
+<td>
+<img src="${p.image}">
+</td>
+
+
+<td>${p.name}</td>
+
+
+<td>${p.price} DH</td>
+
+
+<td>${p.description}</td>
+
+
+<td>
+
+
+<button class="delete"
+onclick="supprimer(${p.id})">
+
+Supprimer
+
+</button>
+
+
+<button class="edit"
+onclick="modifier(${p.id})">
+
+Modifier
+
+</button>
+
+
+</td>
+
+
+</tr>
+
+`;
+
+});
+
+
+document.getElementById("listeProduits").innerHTML=html;
+
+
+}
+
+
+
+
+async function supprimer(id){
+
+
+await fetch("/delete-product/"+id,{
+
+method:"DELETE"
+
+});
+
+
+chargerProduits();
+
+
+}
+
+
+
+
+
+async function modifier(id){
+
+
+let name = prompt("Nom جديد:");
+
+let price = prompt("Prix جديد:");
+
+let description = prompt("Description جديدة:");
+
+
+
+await fetch("/update-product/"+id,{
+
+method:"PUT",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+name:name,
+
+price:price,
+
+description:description
+
+})
+
+
+});
+
+
+chargerProduits();
+
+
+}
+
+
+
+
+
+
+
+async function chargerCommandes(){
+
+
+const res = await fetch("/commandes");
+
+const commandes = await res.json();
+
+
+let html="";
+
+
+commandes.forEach(c=>{
+
+
+html+=`
+
+<tr>
+
+<td>${c.nom}</td>
+
+<td>${c.prenom}</td>
+
+<td>${c.telephone}</td>
+
+<td>${c.adresse}</td>
+
+</tr>
+
+`;
+
+
+});
+
+
+document.getElementById("listeCommandes").innerHTML=html;
+
+
+}
+
+
+
+chargerProduits();
+
+chargerCommandes();
+
+
+</script>
+
+
+</body>
+
+</html>
