@@ -2,7 +2,6 @@
 <html lang="fr">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -12,94 +11,93 @@
 
 body{
     margin:0;
-    font-family:Arial;
+    font-family:Arial,sans-serif;
     background:#f4f4f4;
 }
 
-
 header{
-    background:black;
-    color:white;
-    padding:20px;
+    background:#000;
+    color:#fff;
     text-align:center;
+    padding:20px;
 }
-
 
 .container{
     width:90%;
     margin:auto;
 }
 
-
 .products{
     display:flex;
     flex-wrap:wrap;
     gap:20px;
+    justify-content:center;
 }
-
 
 .card{
-    background:white;
-    padding:20px;
-    width:250px;
+    width:260px;
+    background:#fff;
     border-radius:10px;
-    box-shadow:0 0 10px #ccc;
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+    padding:15px;
 }
-
 
 .card img{
     width:100%;
-    height:200px;
+    height:250px;
     object-fit:cover;
+    border-radius:8px;
 }
 
+.card h3{
+    margin:10px 0;
+}
+
+.card p{
+    color:#555;
+}
 
 button{
-    background:black;
-    color:white;
-    border:0;
-    padding:12px;
-    cursor:pointer;
-    border-radius:5px;
     width:100%;
+    padding:12px;
+    border:none;
+    border-radius:6px;
+    background:#000;
+    color:#fff;
+    cursor:pointer;
+    margin-top:10px;
 }
 
+button:hover{
+    background:#333;
+}
 
 .panier{
-
-    background:white;
-    margin-top:30px;
+    margin-top:40px;
+    background:#fff;
     padding:20px;
     border-radius:10px;
-
 }
-
 
 form{
-
-    background:white;
+    margin-top:40px;
+    background:#fff;
     padding:20px;
-    margin-top:30px;
     border-radius:10px;
-
 }
 
-
-input,textarea{
-
+input,
+textarea{
     width:100%;
     padding:12px;
-    margin:8px 0;
-
+    margin:10px 0;
+    box-sizing:border-box;
 }
 
 </style>
-
 </head>
 
-
 <body>
-
 
 <header>
 
@@ -109,20 +107,11 @@ input,textarea{
 
 </header>
 
-
-
 <div class="container">
-
 
 <h2>Nos Articles</h2>
 
-
-<div class="products" id="products">
-
-</div>
-
-
-
+<div id="products" class="products"></div>
 
 <div class="panier">
 
@@ -134,28 +123,19 @@ Votre panier est vide
 
 </div>
 
-
 <h3>Total : <span id="total">0</span> DH</h3>
-
 
 </div>
 
-
-
-
 <h2>Confirmation de commande</h2>
-
-
 
 <form id="commandeForm">
 
-
-<input 
+<input
 type="text"
 name="nom"
 placeholder="Nom"
 required>
-
 
 <input
 type="text"
@@ -163,20 +143,16 @@ name="prenom"
 placeholder="Prénom"
 required>
 
-
 <input
 type="tel"
 name="telephone"
 placeholder="Téléphone"
 required>
 
-
 <textarea
 name="adresse"
 placeholder="Adresse"
 required></textarea>
-
-
 
 <button type="submit">
 
@@ -184,270 +160,184 @@ Confirmer la commande
 
 </button>
 
-
 </form>
-
 
 </div>
 
+<script type="module">
+    import { db } from "./firebase.js";
 
-
-
-
-<script>
-
+import {
+collection,
+addDoc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 let panier=[];
 
 
-
-
-// Charger les produits
+// =====================
+// Charger Produits
+// =====================
 
 async function chargerProduits(){
 
+    let res = await fetch("/products");
 
-let res = await fetch("/products");
+    let produits = await res.json();
 
+    let html="";
 
-let produits = await res.json();
+    produits.forEach(p=>{
 
+        html+=`
 
+        <div class="card">
 
-let html="";
+            <img src="${p.image}">
 
+            <h3>${p.name}</h3>
 
+            <p>${p.description}</p>
 
-produits.forEach(p=>{
+            <h3>${p.price} DH</h3>
 
+            <button onclick="ajouterPanier('${p.name}',${p.price})">
 
-html+=`
+                Ajouter au panier
 
-<div class="card">
+            </button>
 
+        </div>
 
-<img src="${p.image}">
+        `;
 
+    });
 
-<h3>${p.name}</h3>
-
-
-<p>${p.description}</p>
-
-
-<h3>${p.price} DH</h3>
-
-
-
-<button onclick="ajouterPanier('${p.name}',${p.price})">
-
-Ajouter au panier
-
-</button>
-
-
-
-</div>
-
-
-`;
-
-
-
-});
-
-
-
-document.getElementById("products").innerHTML=html;
-
-
+    document.getElementById("products").innerHTML=html;
 
 }
-
-
-
-
-
-
-// Ajouter au panier
-
-
-function ajouterPanier(name,price){
-
-
-panier.push({
-
-name:name,
-
-price:price
-
-});
-
-
-
-afficherPanier();
-
-
-}
-
-
-
-
-
-
-// Afficher panier
-
-
-function afficherPanier(){
-
-
-let html="";
-
-let total=0;
-
-
-
-panier.forEach((p,index)=>{
-
-
-html+=`
-
-<p>
-
-${p.name} - ${p.price} DH
-
-<button onclick="supprimer(${index})">
-
-Supprimer
-
-</button>
-
-</p>
-
-
-`;
-
-
-total += Number(p.price);
-
-
-
-});
-
-
-
-if(panier.length==0){
-
-html="Votre panier est vide";
-
-}
-
-
-
-document.getElementById("panier").innerHTML=html;
-
-
-document.getElementById("total").innerHTML=total;
-
-
-
-}
-
-
-
-
-// Supprimer produit
-
-
-function supprimer(index){
-
-
-panier.splice(index,1);
-
-
-afficherPanier();
-
-
-}
-
-
-
-
-
-
-
-// Envoyer commande
-
-
-document.getElementById("commandeForm")
-
-.addEventListener("submit",async function(e){
-
-
-e.preventDefault();
-
-
-
-let form = new FormData(this);
-
-
-
-let commande = Object.fromEntries(form);
-
-
-
-commande.panier = panier;
-
-
-
-let res = await fetch("/commande",{
-
-
-method:"POST",
-
-
-headers:{
-
-
-"Content-Type":"application/json"
-
-
-},
-
-
-body:JSON.stringify(commande)
-
-
-
-});
-
-
-
-let data = await res.json();
-
-
-
-alert(data.message);
-
-
-
-this.reset();
-
-
-});
-
-
-
-
-
 
 chargerProduits();
 
 
-</script>
+// =====================
+// Ajouter au panier
+// =====================
+
+window.ajouterPanier=function(name,price){
+
+    panier.push({
+
+        name:name,
+
+        price:price
+
+    });
+
+    afficherPanier();
+
+}
 
 
+// =====================
+// Afficher Panier
+// =====================
 
-</body>
+function afficherPanier(){
 
-</html>
+    let html="";
+
+    let total=0;
+
+    panier.forEach((p,index)=>{
+
+        html+=`
+
+        <p>
+
+        ${p.name} - ${p.price} DH
+
+        <button onclick="supprimer(${index})">
+
+        Supprimer
+
+        </button>
+
+        </p>
+
+        `;
+
+        total+=Number(p.price);
+
+    });
+
+    if(panier.length==0){
+
+        html="Votre panier est vide";
+
+    }
+
+    document.getElementById("panier").innerHTML=html;
+
+    document.getElementById("total").innerHTML=total;
+
+}
+
+window.supprimer=function(index){
+
+    panier.splice(index,1);
+
+    afficherPanier();
+
+}
+// =====================
+// Confirmer la commande
+// =====================
+
+document.getElementById("commandeForm")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    if(panier.length===0){
+
+        alert("Votre panier est vide");
+
+        return;
+
+    }
+
+    let form = new FormData(this);
+
+    let commande = Object.fromEntries(form);
+
+    commande.panier = panier;
+
+    commande.total = document.getElementById("total").textContent;
+
+    commande.date = new Date().toISOString();
+
+    try{
+
+        await addDoc(
+            collection(db,"commandes"),
+            commande
+        );
+
+        alert("Commande envoyée avec succès");
+
+        panier=[];
+
+        afficherPanier();
+
+        this.reset();
+
+    }catch(err){
+
+        console.error(err);
+
+        alert("Erreur lors de l'envoi de la commande");
+
+    }
+
+});
